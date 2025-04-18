@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Video Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .video-thumbnail {
+            width: 100%;
+            height: auto;
+            border-radius: 0.5rem;
+        }
+        .video-card {
+            margin-bottom: 1.5rem;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            transition: transform 0.2s ease-in-out; /* Added smooth transition */
+        }
+        .video-card:hover {
+            transform: translateY(-0.25rem); /* Slight lift on hover */
+            box-shadow: 0 6px 8px -1px rgba(0, 0, 0, 0.15), 0 3px 6px -1px rgba(0, 0, 0, 0.1); /* Increased shadow on hover*/
+        }
+
+        .video-info {
+            padding: 1rem;
+        }
+        .channel-info {
+            display: flex;
+            align-items: center;
+            margin-top: 0.5rem;
+        }
+        .channel-avatar {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 50%;
+            margin-right: 0.75rem;
+            background-color: #ddd;
+            overflow: hidden;  /* Ensure the image doesn't overflow */
+        }
+        .channel-avatar img{
+          width: 100%;
+          height: 100%;
+          object-fit: cover; /*maintain aspect ratio and fill container*/
+        }
+        .video-title {
+            font-size: 1rem;
+            font-semibold;
+            color: #111;
+            line-height: 1.4;
+        }
+        .video-views {
+            font-size: 0.875rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+        .video-channel-name {
+            font-size: 0.875rem;
+            color: #666;
+        }
+        /* Added for the sidebar */
+        .sidebar {
+            width: 250px;
+            /*height: 100vh;*/ /* Make it the full height of the viewport */
+            background-color: #f8fafc; /* Light background */
+            padding-top: 1rem;
+            border-right: 1px solid #e0e0e0; /* Add a border for separation */
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            padding: 0.75rem 1.5rem;
+            color: #333;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth transition */
+            border-radius: 0.5rem;
+            margin-right: 1rem;
+        }
+
+        .sidebar-link:hover {
+            background-color: #e0e0e0; /* Slightly darker on hover */
+            color: #111;
+        }
+
+        .sidebar-link i {
+            margin-right: 1rem;
+            font-size: 1.25rem;
+            color: #555; /* Muted color for icons */
+        }
+        .sidebar-title{
+          margin-left: 1.5rem;
+          margin-top: 1rem;
+          font-size: 1rem;
+          color: #777;
+          font-weight: bold;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+    <header class="bg-white shadow-md py-4">
+        <div class="container mx-auto flex justify-between items-center">
+            <a href="#" class="text-xl font-semibold text-blue-600 flex items-center">
+                <i class="fab fa-youtube text-2xl mr-2"></i>
+                My Video Platform
+            </a>
+            <div class="flex items-center">
+                <input type="text" placeholder="Search..." class="border border-gray-300 rounded-l-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64 md:w-96">
+                <button class="bg-blue-500 hover:bg-blue-600 text-white rounded-r-md py-2 px-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                    <i class="fas fa-search"></i>
+                </button>
+                <a href="#" class="ml-4 text-blue-600 hover:text-blue-700 font-semibold">
+                    <i class="fas fa-upload"></i> Upload
+                </a>
+                <div class="ml-6 relative">
+                    <button id="account-button" class="focus:outline-none">
+                        <i class="fas fa-user-circle text-2xl text-gray-700"></i>
+                    </button>
+                    <div id="account-menu" class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 hidden">
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Profile</a>
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Settings</a>
+                        <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Logout</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="flex flex-grow">
+        <aside class="sidebar hidden md:block">
+            <nav>
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-home"></i> Home
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-fire"></i> Trending
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-play-circle"></i> Subscriptions
+                </a>
+                <h2 class="sidebar-title">Library</h2>
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-history"></i> History
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-clock"></i> Watch Later
+                </a>
+                <a href="#" class="sidebar-link">
+                    <i class="fas fa-thumbs-up"></i> Liked Videos
+                </a>
+            </nav>
+        </aside>
+
+        <main class="container mx-auto py-6 flex-grow">
+            <h2 class="text-2xl font-semibold text-gray-800 mb-4">Recommended Videos</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                <div class="video-card">
+                    <img src="https://placehold.co/600x400/EEE/31343C" alt="Video Thumbnail 1" class="video-thumbnail">
+                    <div class="video-info">
+                        <h3 class="video-title">Amazing природные явления</h3>
+                        <p class="video-views">1M Views | 1 Year Ago</p>
+                        <div class="channel-info">
+                            <div class="channel-avatar">
+                                <img src="https://placehold.co/40x40/CCC/FFF" alt="Channel Avatar 1">
+                            </div>
+                            <p class="video-channel-name">Природные явления</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <img src="https://placehold.co/600x400/EEE/31343C" alt="Video Thumbnail 2" class="video-thumbnail">
+                    <div class="video-info">
+                        <h3 class="video-title">The Best кот Compilation</h3>
+                        <p class="video-views">5M Views | 2 Months Ago</p>
+                        <div class="channel-info">
+                            <div class="channel-avatar">
+                                 <img src="https://placehold.co/40x40/CCC/FFF" alt="Channel Avatar 2">
+                            </div>
+                            <p class="video-channel-name">Funny Cats</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <img src="https://placehold.co/600x400/EEE/31343C" alt="Video Thumbnail 3" class="video-thumbnail">
+                    <div class="video-info">
+                        <h3 class="video-title">Learn JavaScript in 1 Hour</h3>
+                        <p class="video-views">200K Views | 6 Months Ago</p>
+                        <div class="channel-info">
+                            <div class="channel-avatar">
+                                 <img src="https://placehold.co/40x40/CCC/FFF" alt="Channel Avatar 3">
+                            </div>
+                            <p class="video-channel-name">Programming Tutorials</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <img src="https://placehold.co/600x400/EEE/31343C" alt="Video Thumbnail 4" class="video-thumbnail">
+                    <div class="video-info">
+                        <h3 class="video-title">Top 10 Songs of 2024</h3>
+                        <p class="video-views">10M Views | 1 Month Ago</p>
+                        <div class="channel-info">
+                            <div class="channel-avatar">
+                                 <img src="https://placehold.co/40x40/CCC/FFF" alt="Channel Avatar 4">
+                            </div>
+                            <p class="video-channel-name">Music Vibes</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <img src="https://placehold.co/600x400/EEE/31343C" alt="Video Thumbnail 5" class="video-thumbnail">
+                    <div class="video-info">
+                        <h3 class="video-title">5 Minute Home Workout</h3>
+                        <p class="video-views">1M Views | 1 Week Ago</p>
+                        <div class="channel-info">
+                            <div class="channel-avatar">
+                                 <img src="https://placehold.co/40x40/CCC/FFF" alt="Channel Avatar 5">
+                            </div>
+                            <p class="video-channel-name">Fitness First</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="video-card">
+                    <img src="https://placehold.co/600x400/EEE/31343C" alt="Video Thumbnail 6" class="video-thumbnail">
+                    <div class="video-info">
+                        <h3 class="video-title">How to Bake a Cake</h3>
+                        <p class="video-views">500K Views | 3 Weeks Ago</p>
+                        <div class="channel-info">
+                            <div class="channel-avatar">
+                                <img src="https://placehold.co/40x40/CCC/FFF" alt="Channel Avatar 6">
+                            </div>
+                            <p class="video-channel-name">Baking Fun</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <footer class="bg-gray-800 text-white py-4 mt-8">
+        <div class="container mx-auto text-center text-sm">
+            <p>&copy; 2024 My Video Platform. All rights reserved.</p>
+            <a href="#" class="text-blue-400 hover:text-blue-300 ml-4">Privacy Policy</a>
+            <a href="#" class="text-blue-400 hover:text-blue-300 ml-4">Terms of Service</a>
+        </div>
+    </footer>
+
+    <script>
+        const accountButton = document.getElementById('account-button');
+        const accountMenu = document.getElementById('account-menu');
+
+        accountButton.addEventListener('click', () => {
+            accountMenu.classList.toggle('hidden');
+        });
+
+        document.addEventListener('click', (event) => {
+            if (!accountMenu.classList.contains('hidden') && !accountMenu.contains(event.target) && event.target !== accountButton) {
+                accountMenu.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+</html>
